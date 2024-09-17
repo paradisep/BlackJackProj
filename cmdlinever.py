@@ -127,9 +127,9 @@ if PlayerBusted==False:
         print(f"Dealer has busted with {TotalDealerVal}")
         DealerBusted=True
 
-#these four if statements just check gamestates and declare if you've won, lost, or tied against the dealer
+#these four if statements check gamestates parameters and declare if player won, lost, or tied against the dealer
 if PlayerBusted==False and DealerBusted==False:
-    #main gameplay happens here, you and the dealer should regularly *not* bust.
+    #main gameplay happens here, player and the dealer should regularly *not* bust.
     if TotalDealerVal>TotalPlayerVal:
         print(f"Dealer wins with {TotalDealerVal}.")
         print(f"You lose with {TotalPlayerVal}")
