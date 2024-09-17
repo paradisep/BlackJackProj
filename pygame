@@ -1,0 +1,60 @@
+import pygame
+from sprite.spritesheet import Spritesheet
+
+pygame.init()
+
+#define screen size
+SCREEN_W = 1000
+SCREEN_H = 600
+
+#create game window
+screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+pygame.display.set_caption("Sprite Groups")
+
+#frame rate
+clock = pygame.time.Clock()
+FPS = 60
+
+le_spritesheet = Spritesheet('sprite/spritesheet.png',0,0)
+HeartsSprites = []
+ClubsSprites = []
+DiamondsSprites = []
+SpadesSprites = []
+for h in range(0,4):
+    for s in range(0,13):
+        realnum = (h*13)+(s)
+        if h==0:
+            if realnum < 10:
+                HeartsSprites.append(le_spritesheet.parse_sprite(f'tile00{realnum}.png'))
+            if realnum >= 10:
+                HeartsSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
+        if h==1:
+            ClubsSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
+        if h==2:
+            DiamondsSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
+        if h==3:
+            SpadesSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
+index = 0
+
+#game loop
+run = True
+while run:
+
+  clock.tick(FPS)
+
+  #update background
+  screen.fill("dark green")
+  screen.blit(SpadesSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+  #event handler
+  for event in pygame.event.get():
+    #quit program
+    if event.type == pygame.QUIT:
+      run = False
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_SPACE:
+            index= (index+1) % len(SpadesSprites)
+
+  #update display
+  pygame.display.flip()
+
+pygame.quit()

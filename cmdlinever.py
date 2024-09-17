@@ -1,11 +1,22 @@
 import random as rand
+
 Suit_temp = {"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"Jack":10,"Queen":10,"King":10,"Ace":[1,11]}
 #setting up suits
-Clubs = {**Suit_temp}
-Spades = {**Suit_temp}
-Diamonds = {**Suit_temp}
-Hearts = {**Suit_temp}
+Clubs = {}
+Spades = {}
+Diamonds = {}
+Hearts = {}
 Suits = [Clubs,Spades,Diamonds,Hearts]
+for suit in range(0,len(Suits)):
+    for key in list(Suit_temp.keys()):
+        if suit==0:
+            Suits[suit][f"{key} of Clubs"] = Suit_temp[key]
+        if suit==1:
+            Suits[suit][f"{key} of Spades"] = Suit_temp[key]
+        if suit==2:
+            Suits[suit][f"{key} of Diamonds"] = Suit_temp[key]
+        if suit==3:
+            Suits[suit][f"{key} of Hearts"] = Suit_temp[key]
 #instancing Hands
 PlayerHand = {}
 DealerHand = {}
