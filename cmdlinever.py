@@ -42,15 +42,15 @@ def SetUpGame(S,GS):
     GS[6] = False #DealerBusted=False
 
 #function checks the total value of player's hand
-def CheckPlayerTVal():
+def CheckTVal(Hand):
     temptotal=0
     #has ace checks if the player has ace and adjusts player's total hand value as such
     HasAce = False
-    for x in PlayerHand:
-        if  "ace" in x.lower() or type(PlayerHand[x])==list:
+    for x in Hand:
+        if  "ace" in x.lower() or type(Hand[x])==list:
             HasAce=True
         else:
-            temptotal+=PlayerHand[x]
+            temptotal+=Hand[x]
     if temptotal+11>21 and HasAce==True:
         temptotal+=1
     elif HasAce==True:
@@ -58,26 +58,13 @@ def CheckPlayerTVal():
     #function returns total of player's hand
     return temptotal
 #functionally the same as the CheckPlayerTVal function but replace's the PlayerHand with DealerHand
-def CheckDealerTVal():
-    temptotal=0
-    HasAce = False
-    for x in DealerHand:
-        if "ace" in x.lower() or type(DealerHand[x])==list:
-            HasAce=True
-        else:
-            temptotal+=DealerHand[x]
-    if temptotal+11>21 and HasAce==True:
-        temptotal+=1
-    elif HasAce==True:
-        temptotal+=11
-    return temptotal
 #function adds a card to the respective hand which is given in the Hand variable
-def AddCardToHand(Hand):
+def AddCardToHand(Suits, Hand):
     Stemp = rand.choice(Suits)
     cardname,cardval = rand.choice(list(Stemp.items()))
     Hand[cardname] = Stemp[cardname]
     del Stemp[cardname]
-
+'''
 SetUpGame(Suits,GameStuff)
 #setting up player hand for gameplay loop
 AddCardToHand(PlayerHand)
@@ -100,8 +87,14 @@ while PlayerStanded==False and PlayerBusted==False:
         print("You have stood")
         PlayerStanded=True
     elif "hit" in hitorstand:
+        PlyrCAmntBefore = len(PlayerHand)
         AddCardToHand(PlayerHand)
-        #!!!!!!!!!!!!!!!!! CHECK IF CARD WAS ACTUALLY ADDED, BUG HAPPENS WHERE CARD IS NOT ADDED !!!!!!!!!!!!!
+        PlyrCAmntAfter = len(PlayerHand)
+        #while loop somewhat fixes bug where Player doesnt recieve a card even though they've hit.
+        while PlyrCAmntBefore+1!=PlyrCAmntAfter:
+            PlyrCAmntBefore = len(PlayerHand)
+            AddCardToHand(PlayerHand)
+            PlyrCAmntAfter = len(PlayerHand)
         print(f"You have {PlayerHand}")
         TotalPlayerVal = CheckPlayerTVal()
         print(f"Which is {TotalPlayerVal}")
@@ -146,3 +139,4 @@ elif PlayerBusted==False and DealerBusted==True:
 elif PlayerBusted==True and DealerBusted==True:
     print(f"You and the dealer both busted on {TotalPlayerVal}")
     print("You tie, I guess...")
+'''

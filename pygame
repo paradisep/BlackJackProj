@@ -1,5 +1,5 @@
 import pygame
-import cmdlinever
+from cmdlinever import SetUpGame, CheckTVal, AddCardToHand
 from sprite.spritesheet import Spritesheet
 
 pygame.init()
@@ -16,6 +16,27 @@ pygame.display.set_caption("Sprite Groups")
 clock = pygame.time.Clock()
 FPS = 60
 
+#blackjack variables
+Suit_temp = {"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"Jack":10,"Queen":10,"King":10,"Ace":[1,11]}
+Suits = [{},{},{},{}]
+Clubs = Suits[0]
+Spades = Suits[1]
+Diamonds = Suits[2]
+Hearts = Suits[3]
+#instancing gamestuff
+GameStuff = [{},{},0,0,False,False,False]
+#instancing Hands
+PlayerHand = GameStuff[0]
+DealerHand = GameStuff[1]
+#instancing Hand Values
+TotalPlayerVal = GameStuff[2]
+TotalDealerVal = GameStuff[3]
+#GameStates
+PlayerStanded = GameStuff[4]
+PlayerBusted = GameStuff[5]
+DealerBusted = GameStuff[6]
+SetUpGame(Suits,GameStuff)
+
 le_spritesheet = Spritesheet('sprite/spritesheet.png',0,0)
 HeartsSprites = []
 ClubsSprites = []
@@ -24,16 +45,16 @@ SpadesSprites = []
 for h in range(0,4):
     for s in range(0,13):
         realnum = (h*13)+(s)
-        if h==0:
+        if h==0: #0-12
             if realnum < 10:
                 HeartsSprites.append(le_spritesheet.parse_sprite(f'tile00{realnum}.png'))
             if realnum >= 10:
                 HeartsSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
-        if h==1:
+        if h==1: #13 - 25
             ClubsSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
-        if h==2:
+        if h==2: #26 - 38
             DiamondsSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
-        if h==3:
+        if h==3: #39 - 51
             SpadesSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
 index = 0
 
@@ -45,7 +66,29 @@ while run:
 
   #update background
   screen.fill("dark green")
-  screen.blit(SpadesSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+  if len(list(PlayerHand.keys()))>0:
+    for key, value in list(PlayerHand.items()):
+        if "jack" in key.lower():
+            index=9
+        elif "queen" in key.lower():
+            index=10
+        elif "king" in key.lower():
+            index=11
+        elif "ace" in key.lower():
+            index=12
+        else:
+            index=value-1
+        if "hearts" in key.lower():
+            screen.blit(HeartsSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+        if "clubs" in key.lower():
+            screen.blit(ClubsSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            index+=13
+        if "diamonds" in key.lower():
+            screen.blit(DiamondsSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            index+=13*2
+        if "spades" in key.lower():
+            screen.blit(SpadesSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            index+=13*3
   #event handler
   for event in pygame.event.get():
     #quit program
@@ -53,7 +96,7 @@ while run:
       run = False
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_SPACE:
-            index= (index+1) % len(SpadesSprites)
+            AddCardToHand(Suits,PlayerHand)
 
   #update display
   pygame.display.flip()
