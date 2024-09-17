@@ -1,32 +1,45 @@
 import random as rand
-
-Suit_temp = {"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"Jack":10,"Queen":10,"King":10,"Ace":[1,11]}
 #setting up suits
-Clubs = {}
-Spades = {}
-Diamonds = {}
-Hearts = {}
-Suits = [Clubs,Spades,Diamonds,Hearts]
-for suit in range(0,len(Suits)):
-    for key in list(Suit_temp.keys()):
-        if suit==0:
-            Suits[suit][f"{key} of Clubs"] = Suit_temp[key]
-        if suit==1:
-            Suits[suit][f"{key} of Spades"] = Suit_temp[key]
-        if suit==2:
-            Suits[suit][f"{key} of Diamonds"] = Suit_temp[key]
-        if suit==3:
-            Suits[suit][f"{key} of Hearts"] = Suit_temp[key]
+Suit_temp = {"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"Jack":10,"Queen":10,"King":10,"Ace":[1,11]}
+Suits = [{},{},{},{}]
+Clubs = Suits[0]
+Spades = Suits[1]
+Diamonds = Suits[2]
+Hearts = Suits[3]
+#instancing gamestuff
+GameStuff = [{},{},0,0,False,False,False]
 #instancing Hands
-PlayerHand = {}
-DealerHand = {}
+PlayerHand = GameStuff[0]
+DealerHand = GameStuff[1]
 #instancing Hand Values
-TotalPlayerVal = 0
-TotalDealerVal = 0
+TotalPlayerVal = GameStuff[2]
+TotalDealerVal = GameStuff[3]
 #GameStates
-PlayerStanded = False
-PlayerBusted=False
-DealerBusted=False
+PlayerStanded = GameStuff[4]
+PlayerBusted = GameStuff[5]
+DealerBusted = GameStuff[6]
+#bundle all used game stuff together to easily reset
+def SetUpGame(S,GS):
+    for suit in range(0,len(S)):
+        for key in list(Suit_temp.keys()):
+            if suit==0:
+                S[suit][f"{key} of Clubs"] = Suit_temp[key]
+            if suit==1:
+                S[suit][f"{key} of Spades"] = Suit_temp[key]
+            if suit==2:
+                S[suit][f"{key} of Diamonds"] = Suit_temp[key]
+            if suit==3:
+                S[suit][f"{key} of Hearts"] = Suit_temp[key]
+    #reseting Hands
+    GS[0] = {} #PlayerHand = {}
+    GS[1] = {} #DealerHand = {}
+    #resting Hand Values
+    GS[2] = 0 #TotalPlayerVal = 0
+    GS[3] = 0 #TotalDealerVal = 0
+    #Resting Game States
+    GS[4] = False #PlayerStanded = False
+    GS[5] = False #PlayerBusted=False
+    GS[6] = False #DealerBusted=False
 
 #function checks the total value of player's hand
 def CheckPlayerTVal():
@@ -65,6 +78,7 @@ def AddCardToHand(Hand):
     Hand[cardname] = Stemp[cardname]
     del Stemp[cardname]
 
+SetUpGame(Suits,GameStuff)
 #setting up player hand for gameplay loop
 AddCardToHand(PlayerHand)
 AddCardToHand(PlayerHand)
