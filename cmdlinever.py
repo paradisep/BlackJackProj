@@ -20,26 +20,28 @@ PlayerBusted = GameStuff[5]
 DealerBusted = GameStuff[6]
 #bundle all used game stuff together to easily reset
 def SetUpGame(S,GS):
-    for suit in range(0,len(S)):
-        for key in list(Suit_temp.keys()):
-            if suit==0:
-                S[suit][f"{key} of Clubs"] = Suit_temp[key]
-            if suit==1:
-                S[suit][f"{key} of Spades"] = Suit_temp[key]
-            if suit==2:
-                S[suit][f"{key} of Diamonds"] = Suit_temp[key]
-            if suit==3:
-                S[suit][f"{key} of Hearts"] = Suit_temp[key]
-    #reseting Hands
-    GS[0] = {} #PlayerHand = {}
-    GS[1] = {} #DealerHand = {}
-    #resting Hand Values
-    GS[2] = 0 #TotalPlayerVal = 0
-    GS[3] = 0 #TotalDealerVal = 0
-    #Resting Game States
-    GS[4] = False #PlayerStanded = False
-    GS[5] = False #PlayerBusted=False
-    GS[6] = False #DealerBusted=False
+    if len(S)>1:
+        for suit in range(0,len(S)):
+            for key in list(Suit_temp.keys()):
+                if suit==0:
+                    S[suit][f"{key} of Clubs"] = Suit_temp[key]
+                if suit==1:
+                    S[suit][f"{key} of Spades"] = Suit_temp[key]
+                if suit==2:
+                    S[suit][f"{key} of Diamonds"] = Suit_temp[key]
+                if suit==3:
+                    S[suit][f"{key} of Hearts"] = Suit_temp[key]
+    if len(GS)>1:
+        #reseting Hands
+        GS[0] = {} #PlayerHand = {}
+        GS[1] = {} #DealerHand = {}
+        #resting Hand Values
+        GS[2] = 0 #TotalPlayerVal = 0
+        GS[3] = 0 #TotalDealerVal = 0
+        #Resting Game States
+        GS[4] = False #PlayerStanded = False
+        GS[5] = False #PlayerBusted=False
+        GS[6] = False #DealerBusted=False
 
 #function checks the total value of player's hand
 def CheckTVal(Hand):
@@ -61,6 +63,20 @@ def CheckTVal(Hand):
 #function adds a card to the respective hand which is given in the Hand variable
 def AddCardToHand(Suits, Hand):
     Stemp = rand.choice(Suits)
+    e=True
+    #checking if all suits are empty!!! if they are then rip...
+    while e==True:
+        emptysuits=0
+        for x in Suits:
+            if len(x)<=0:
+                emptysuits+=1
+        if emptysuits>=4:
+            e=False
+            return print("All Suits Empty")
+        if len(Stemp)>0:
+            e=False
+        else:
+            Stemp = rand.choice(Suits)
     cardname,cardval = rand.choice(list(Stemp.items()))
     Hand[cardname] = Stemp[cardname]
     del Stemp[cardname]
@@ -87,14 +103,7 @@ while PlayerStanded==False and PlayerBusted==False:
         print("You have stood")
         PlayerStanded=True
     elif "hit" in hitorstand:
-        PlyrCAmntBefore = len(PlayerHand)
         AddCardToHand(PlayerHand)
-        PlyrCAmntAfter = len(PlayerHand)
-        #while loop somewhat fixes bug where Player doesnt recieve a card even though they've hit.
-        while PlyrCAmntBefore+1!=PlyrCAmntAfter:
-            PlyrCAmntBefore = len(PlayerHand)
-            AddCardToHand(PlayerHand)
-            PlyrCAmntAfter = len(PlayerHand)
         print(f"You have {PlayerHand}")
         TotalPlayerVal = CheckPlayerTVal()
         print(f"Which is {TotalPlayerVal}")

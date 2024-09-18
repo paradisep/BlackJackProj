@@ -58,6 +58,11 @@ for h in range(0,4):
             SpadesSprites.append(le_spritesheet.parse_sprite(f'tile0{realnum}.png'))
 index = 0
 
+AddCardToHand(Suits,PlayerHand)
+AddCardToHand(Suits,PlayerHand)
+AddCardToHand(Suits,DealerHand)
+AddCardToHand(Suits,DealerHand)
+
 #game loop
 run = True
 while run:
@@ -66,8 +71,11 @@ while run:
 
   #update background
   screen.fill("dark green")
+  handposP=0
+  handposD=0
   if len(list(PlayerHand.keys()))>0:
     for key, value in list(PlayerHand.items()):
+        handposP+=1
         if "jack" in key.lower():
             index=9
         elif "queen" in key.lower():
@@ -77,26 +85,54 @@ while run:
         elif "ace" in key.lower():
             index=12
         else:
-            index=value-1
+            index=value-2
         if "hearts" in key.lower():
-            screen.blit(HeartsSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            screen.blit(HeartsSprites[index],((((SCREEN_W/((len(list(PlayerHand.keys())))+1))*handposP)) - 142/2,(SCREEN_H/2)+100))
         if "clubs" in key.lower():
-            screen.blit(ClubsSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            screen.blit(ClubsSprites[index],((((SCREEN_W/((len(list(PlayerHand.keys())))+1))*handposP)) - 142/2,(SCREEN_H/2)+100))
             index+=13
         if "diamonds" in key.lower():
-            screen.blit(DiamondsSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            screen.blit(DiamondsSprites[index],((((SCREEN_W/((len(list(PlayerHand.keys())))+1))*handposP)) - 142/2,(SCREEN_H/2)+100))
             index+=13*2
         if "spades" in key.lower():
-            screen.blit(SpadesSprites[index],((SCREEN_W/2) - 142/2,(SCREEN_H/2)+50))
+            screen.blit(SpadesSprites[index],((((SCREEN_W/((len(list(PlayerHand.keys())))+1))*handposP)) - 142/2,(SCREEN_H/2)+100))
             index+=13*3
+    if len(list(DealerHand.keys()))>0:
+        for key, value in list(DealerHand.items()):
+            handposD+=1
+            if "jack" in key.lower():
+                index=9
+            elif "queen" in key.lower():
+                index=10
+            elif "king" in key.lower():
+                index=11
+            elif "ace" in key.lower():
+                index=12
+            else:
+                index=value-2
+            if "hearts" in key.lower():
+                screen.blit(HeartsSprites[index],((((SCREEN_W/((len(list(DealerHand.keys())))+1))*handposD)) - 142/2,(10)))
+            if "clubs" in key.lower():
+                screen.blit(ClubsSprites[index],((((SCREEN_W/((len(list(DealerHand.keys())))+1))*handposD)) - 142/2,(10)))
+                index+=13
+            if "diamonds" in key.lower():
+                screen.blit(DiamondsSprites[index],((((SCREEN_W/((len(list(DealerHand.keys())))+1))*handposD)) - 142/2,(10)))
+                index+=13*2
+            if "spades" in key.lower():
+                screen.blit(SpadesSprites[index],((((SCREEN_W/((len(list(DealerHand.keys())))+1))*handposD)) - 142/2,(10)))
+                index+=13*3
   #event handler
   for event in pygame.event.get():
     #quit program
     if event.type == pygame.QUIT:
       run = False
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_SPACE:
-            AddCardToHand(Suits,PlayerHand)
+        if PlayerStanded==False and PlayerBusted==False:
+            if event.key == pygame.K_SPACE:
+                AddCardToHand(Suits,PlayerHand)
+                TotalPlayerVal = CheckTVal(PlayerHand)
+            elif event.key == pygame.K_g:
+                PlayerStanded=True
 
   #update display
   pygame.display.flip()
