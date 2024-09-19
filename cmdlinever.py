@@ -7,7 +7,7 @@ Spades = Suits[1]
 Diamonds = Suits[2]
 Hearts = Suits[3]
 #instancing gamestuff
-GameStuff = [{},{},0,0,False,False,False]
+GameStuff = [{},{},0,0,False,False,False,False,False]
 #instancing Hands
 PlayerHand = GameStuff[0]
 DealerHand = GameStuff[1]
@@ -18,6 +18,8 @@ TotalDealerVal = GameStuff[3]
 PlayerStanded = GameStuff[4]
 PlayerBusted = GameStuff[5]
 DealerBusted = GameStuff[6]
+DealerStanded = GameStuff[7]
+DealerMsgActive=GameStuff[8]
 #bundle all used game stuff together to easily reset
 def SetUpGame(S,GS):
     if len(S)>1:
@@ -42,6 +44,8 @@ def SetUpGame(S,GS):
         GS[4] = False #PlayerStanded = False
         GS[5] = False #PlayerBusted=False
         GS[6] = False #DealerBusted=False
+        GS[7] = False #DealerStanded=False
+        GS[8] = False #DealerMsgActive=False
 
 #function checks the total value of player's hand
 def CheckTVal(Hand):
